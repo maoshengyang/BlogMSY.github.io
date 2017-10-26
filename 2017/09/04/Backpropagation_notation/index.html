@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Study Notes,Machine Learning," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Coursera深度学习专项（Deep Learning Specialization by Andrew Ng）的学习笔记 在深度学习专项课程中，Andrew老师使用了另一套参数变量记号。在这一篇博文中重新记录Forward and Backward Propagation算法的数学表达公式，并对coding过程进行简单设计。  参数变量记号 算法数学原理 程序框架设计">
+<meta name="keywords" content="Study Notes,Machine Learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Forward and Backward Propagation 算法的实现(记号更新)">
+<meta property="og:url" content="http://BruceMSY.com/2017/09/04/Backpropagation_notation/index.html">
+<meta property="og:site_name" content="This Blog Has No Name">
+<meta property="og:description" content="Coursera深度学习专项（Deep Learning Specialization by Andrew Ng）的学习笔记 在深度学习专项课程中，Andrew老师使用了另一套参数变量记号。在这一篇博文中重新记录Forward and Backward Propagation算法的数学表达公式，并对coding过程进行简单设计。  参数变量记号 算法数学原理 程序框架设计">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-26T06:45:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Forward and Backward Propagation 算法的实现(记号更新)">
+<meta name="twitter:description" content="Coursera深度学习专项（Deep Learning Specialization by Andrew Ng）的学习笔记 在深度学习专项课程中，Andrew老师使用了另一套参数变量记号。在这一篇博文中重新记录Forward and Backward Propagation算法的数学表达公式，并对coding过程进行简单设计。  参数变量记号 算法数学原理 程序框架设计">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://BruceMSY.com/2017/09/04/Backpropagation_notation/"/>
+
+
+
+
+
+  <title>Forward and Backward Propagation 算法的实现(记号更新) | This Blog Has No Name</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">This Blog Has No Name</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">MSY's Blog</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://BruceMSY.com/2017/09/04/Backpropagation_notation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MaoShengYang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/Photo.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="This Blog Has No Name">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Forward and Backward Propagation 算法的实现(记号更新)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-04T00:00:00+08:00">
+                2017-09-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/09/04/Backpropagation_notation/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/09/04/Backpropagation_notation/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>Coursera深度学习专项（Deep Learning Specialization by Andrew Ng）的学习笔记</strong></p>
+<p>在深度学习专项课程中，Andrew老师使用了另一套参数变量记号。在这一篇博文中重新记录Forward and Backward Propagation算法的数学表达公式，并对coding过程进行简单设计。</p>
+<ul>
+<li>参数变量记号</li>
+<li>算法数学原理</li>
+<li>程序框架设计</li>
+</ul>
+<h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><h3 id="数学推导"><a href="#数学推导" class="headerlink" title="数学推导"></a><strong>数学推导</strong></h3><p>课程中Andrew直接给出了$\delta^{\left( k \right)}$的递推表达式，这是理解整个算法原理的关键。这里将对$\delta^{\left( k \right)}$的数学意义（视频中只给出了$\delta^{\left( L \right)} = a^{\left( L \right)}-y$）以及整个推导的过程进行一个注解。这里的同样采用了Matrix Calculus的规则进行直接推导。</p>
+<ul>
+<li><p><strong>变量记号</strong></p>
+<p>完全按照Andrew视频中的规定。</p>
+<ul>
+<li>$z^{\left(k\right)}$代表第$k$层线性预测结果 </li>
+<li>$a^{\left(k\right)}$代表第$k$层经过激活函数之后的预测结果</li>
+<li>$\Theta^{\left(k\right)}$代表第$k$层到第$k+1$层的权重矩阵</li>
+<li>${\mathop{\rm J}\nolimits}\left(\Theta\right)$代表cost function</li>
+</ul>
+<p>有以下关系：</p>
+<ul>
+<li>$a^{\left(0\right)} = x$，输入层</li>
+<li>$a^{\left(L\right)}$，输出层</li>
+<li>$a^{\left(k\right)} = g\left(z^{\left(k\right)}\right)$</li>
+<li>$z^{\left(k+1\right)}=\Theta^{\left(k\right)}a^{\left(k\right)}$</li>
+</ul>
+<p><strong>值得注意的是在Andrew老师的Deep Learning Specialization系列课程中改变了记号规则，通常用$W^{\left(k\right)}$表示第$k-1$层到$k$层的权重矩阵；单独用$b^{\left(k\right)}$表示相应的偏置向量。</strong></p>
+</li>
+<li><p><strong>$\delta$的意义</strong></p>
+<p>应用梯度下降法（gradient decent）的关键是求出cost function对权重值的梯度$\frac{\partial {\mathop{\rm J}\nolimits} \left( \Theta  \right)}{\partial \Theta _{ij}^{\left( k \right)}}$，而第$k$层的权重值会出现在第$k+1$层的线性预测$z^{\left(k+1\right)}$的计算中，所以由链式法则可以得到</p>
+<script type="math/tex; mode=display">\frac{\partial \mathop{\rm J}\nolimits \left( \Theta  \right)}{\partial \Theta _{ij}^{\left( k \right)}} = \frac{\partial z^{\left( k+1 \right)}}{\partial \Theta _{ij}^{\left( k \right)}}\frac{\partial {\mathop{\rm J}\nolimits} \left( \Theta  \right)}{\partial z^{\left( k+1 \right)}}</script><p>令$\delta^{\left( k \right)}=\frac{\partial {\mathop{\rm J}\nolimits} \left( \Theta  \right)}{\partial z^{\left( k \right)}}$代表第$k$层线性预测结果的变化量对最终cost function的影响，这便是$\delta$的数学意义。</p>
+</li>
+<li><p><strong>$\delta$的递推表达式</strong></p>
+<p>继续使用链式法则求$\delta^{\left( k \right)}$</p>
+<script type="math/tex; mode=display">\begin{array}{l}
+\delta ^{\left( k \right)} = \frac{\partial {\mathop{\rm J}\nolimits} \left( \Theta  \right)}{\partial z^{\left( k \right)}}\\
+\;\;\;\;\;\;= \frac{\partial a^{\left( k \right)}}{\partial z^{\left( k \right)}}\frac{\partial z^{\left( k + 1 \right)}}{\partial a^{\left( k \right)}}\frac{\partial \mathop{\rm J}\nolimits \left( \Theta  \right)}{\partial z^{\left( {k + 1} \right)}}\\
+\;\;\;\;\;\;= \frac{\partial \mathop{\rm g}\nolimits \left( z^{\left( k \right)} \right)}{\partial z^{\left( k \right)}}\left( \Theta ^{\left( k \right)} \right)^{\sf{T}}\delta ^{\left( k + 1 \right)}\\
+\;\;\;\;\;\;=\mathop{\rm g}\nolimits'\left( z^{\left( k \right)} \right)  \circ \left( \Theta ^{\left( k \right)} \right)^{\sf{T}}\delta ^{\left( k + 1 \right)}
+\end{array}</script><p>式子中的$\circ$运算符代表Hardamard Product，运算规则为$\left( \bf{A} \circ \bf{B} \right)_{ij} = A_{ij}B_{ij}$。<br>递推式是从输出端到输入端进行更新的，这也非常符合cost function最先由输出端计算出来的特点。</p>
+</li>
+<li><p><strong>权重的梯度</strong></p>
+<script type="math/tex; mode=display">\frac{\partial \mathop{\rm J}\nolimits \left( \Theta  \right)}{\partial \Theta _{ij}^{\left( k \right)}} = \frac{\partial z^{\left( k + 1 \right)}}{\partial \Theta _{ij}^{\left( k \right)}}\delta ^{\left( k + 1 \right)} = a_j\delta_i^{\left( k + 1 \right)}</script><script type="math/tex; mode=display">\frac{\partial \mathop{\rm J}\nolimits \left( \Theta  \right)}{\partial \Theta^{\left( k \right)}}= \delta^{\left( k + 1 \right)} \otimes {a^{\left( k \right)}}^\sf{T}</script><p>式子中的$\otimes$运算符代表Outer Product。</p>
+</li>
+<li><p><strong>算法过程的向量化</strong></p>
+<p>在真实的应用中，我们通常会一次性读入$m$条数据进行拟合，这时候会有如下处理：</p>
+<ul>
+<li>${\bf{A}}^{\left(0\right)}={\bf{X}} = \left[ \begin{array}{l}{x^{{{\left( 1 \right)}^{\sf{T}}}}}\\{x^{{{\left( 1 \right)}^{\sf{T}}}}}\\...\\{x^{{{\left( m \right)}^{\sf{T}}}}}\end{array} \right]_{m\times s_0}$
+<ul>
+<li>${\bf{A}}^{\left(L\right)}=\left[ \begin{array}{l}{\left({\mathop{\rm h_{\Theta}}\nolimits}\left(x^{{{\left( 1 \right)}}}\right)\right)^\sf{T}}\\{\left({\mathop{\rm h_{\Theta}}\nolimits}\left(x^{{{\left( 2 \right)}}}\right)\right)^\sf{T}}\\...\\{\left({\mathop{\rm h_{\Theta}}\nolimits}\left(x^{{{\left( m \right)}}}\right)\right)^\sf{T}}\end{array} \right]_{m\times s_L}$</li>
+<li>${\bf{A}}^{\left(k\right)}={\mathop{\rm g}\nolimits}\left({\bf{Z}}^{\left(k\right)}\right)$</li>
+<li>${\bf{Z}}^{\left(k+1\right)}={\bf{A}}^{\left(k\right)}\left(\Theta^{\left(k\right)}\right)^{\sf{T}}$</li>
+</ul>
+</li>
+<li>$\left[{\bf{\delta}}^{\left(k\right)}\right]_{m \times s_k}={\mathop{\rm g}\nolimits'}\left( {\bf{Z}}^{\left( k \right)} \right) \circ \left[{\bf{\delta}}^{\left(k+1\right)}\right]_{m \times s_{k+1}} \Theta^{\left(k\right)}$</li>
+<li>$\frac{\partial \mathop{\rm J}\nolimits \left( \Theta  \right)}{\partial \Theta^{\left( k \right)}}= \left[{\bf{\delta}}^{\left(k+1\right)}\right]_{m \times s_{k+1}}^{\sf{T}}{\bf{A}}^{\left(k\right)}$
+</li>
+</ul>
+<p>最后一个式子的推导如下：</p>
+$$\begin{array}{l}\frac{\partial {\mathop{\rm J}\nolimits} \left( \Theta  \right)}{\partial {\Theta ^{\left( k \right)}}} = \sum\limits_{i = 1}^m {\left[ {{\delta ^{\left( {k + 1} \right)}}} \right]} _{{i^{th}}\_row}^{\sf{T}} \otimes {\bf{A}}_{{i^{th}}\_row}^{\left( k \right)}\\ = \left[ {\left[ {{\delta ^{\left( {k + 1} \right)}}} \right]_{{1^{st}}\_row}^{\sf{T}},\left[ {{\delta ^{\left( {k + 1} \right)}}} \right]_{{2^{nd}}\_row}^{\sf{T}},...,\left[ {{\delta ^{\left( {k + 1} \right)}}} \right]_{{m^{th}}\_row}^{\sf{T}}} \right] \cdot \left[ \begin{array}{l}{\bf{A}}_{{1^{st}}\_row}^{\left( k \right)}\\{\bf{A}}_{{2^{nd}}\_row}^{\left( k \right)}\\...\\{\bf{A}}_{{m^{th}}\_row}^{\left( k \right)}\end{array} \right]\\ = \left[ {{\delta ^{\left( {k + 1} \right)}}} \right]_{m \times {s_{k + 1}}}^{\sf{T}}{{\bf{A}}^{\left( k \right)}}\end{array}$$</li>
+<li><p><strong>Cost Function的选取</strong></p>
+<p>递推的初始条件是</p>
+<script type="math/tex; mode=display">\delta^{\left( L \right)}=\frac{\partial {\mathop{\rm J}\nolimits} \left( \Theta  \right)}{\partial z^{\left( L \right)}}=\mathop{\rm g}\nolimits'\left( z^{\left( L \right)} \right) \circ \frac{\partial \mathop{\rm J}\nolimits \left( \Theta  \right)}{\partial a^{\left( L \right)}}</script><p>绝大部分博客中取误差平方函数作为cost function，也即是</p>
+<script type="math/tex; mode=display">\mathop{\rm J}\nolimits \left( \Theta  \right) = \frac{1}{2}\left\| a^{\left( L \right)} - y \right\|^2</script><p>在这种情况下，递推初始条件为</p>
+<script type="math/tex; mode=display">\delta^{\left( L \right)}=\mathop{\rm g}\nolimits'\left( z^{\left( L \right)} \right) \circ \left(a^{\left( L \right)}-y\right)=a^{\left( L \right)}\circ \left(1-a^{\left( L \right)}\right) \circ \left(a^{\left( L \right)}-y\right)</script><p>在Andrew的视频中，取的是与Logistics Regression类似的cost function（认为输出结果应该满足伯努利0-1分布），也即是</p>
+<script type="math/tex; mode=display">\mathop{\rm J}\nolimits \left( \Theta  \right) = -\left( y^{\sf{T}}\log \left( a^{\left( L \right)} \right) + \left( {1 - y} \right)^{\sf{T}}\log \left( {1 - a^{\left( L \right)}} \right) \right)</script><p>在这种情况下，递推初始条件为</p>
+<script type="math/tex; mode=display">\delta^{\left( L \right)}=a^{\left( L \right)}-y</script></li>
+</ul>
+<p>以上推导纯粹从数学表达式出发利用Matrix Calculus进行演算。对Backpropagation算法的流程及更直观的解释可以参考其它博客。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>赏点儿猫粮呗~</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="MaoShengYang WeChat Pay"/>
+        <p>微信打赏，WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="MaoShengYang Alipay"/>
+        <p>支付宝打赏，Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Study-Notes/" rel="tag"># Study Notes</a>
+          
+            <a href="/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/04/Backpropagation/" rel="next" title="Backpropagation 算法的数学推导">
+                <i class="fa fa-chevron-left"></i> Backpropagation 算法的数学推导
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/10/LogisticReg/" rel="prev" title="Logistic Regression 的相关数学推导">
+                Logistic Regression 的相关数学推导 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/Photo.jpeg"
+              alt="MaoShengYang" />
+          
+            <p class="site-author-name" itemprop="name">MaoShengYang</p>
+            <p class="site-description motion-element" itemprop="description">\int_{birth}^{death} learning \dot dt</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives">
+            
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/maoshengyang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:maoshengyang@126.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                    
+                      E-Mail
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/shengyang-mao-02411359" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                    
+                      LinkedIn
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/mao-sheng-yang" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-zhihu"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">1.</span> <span class="nav-text"></span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数学推导"><span class="nav-number">1.1.</span> <span class="nav-text">数学推导</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MaoShengYang</span>
+
+  
+</div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 95599, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 95599, xid: "2017/09/04/Backpropagation_notation/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = "en";
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/95599/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
