@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="This Blog Has No Name">
 <meta property="og:description" content="Coursera机器学习课程（by Andrew Ng）的学习笔记 对Neural Network课程中的数学推导进行补充记录，主要涉及以下内容:  Matrix Calculus的简单介绍 Backpropagation的纯数学推导">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-26T06:45:00.000Z">
+<meta property="og:updated_time" content="2017-11-04T15:26:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Backpropagation 算法的数学推导">
 <meta name="twitter:description" content="Coursera机器学习课程（by Andrew Ng）的学习笔记 对Neural Network课程中的数学推导进行补充记录，主要涉及以下内容:  Matrix Calculus的简单介绍 Backpropagation的纯数学推导">
@@ -430,7 +430,8 @@
 \end{array}</script><p>式子中的$\circ$运算符代表Hardamard Product，运算规则为$\left( \bf{A} \circ \bf{B} \right)_{ij} = A_{ij}B_{ij}$。<br>递推式是从输出端到输入端进行更新的，这也非常符合cost function最先由输出端计算出来的特点。</p>
 </li>
 <li><p><strong>权重的梯度</strong></p>
-<script type="math/tex; mode=display">\frac{\partial \mathop{\rm J}\nolimits \left( \Theta  \right)}{\partial \Theta _{ij}^{\left( k \right)}} = \frac{\partial z^{\left( k + 1 \right)}}{\partial \Theta _{ij}^{\left( k \right)}}\delta ^{\left( k + 1 \right)} = a_j\delta_i^{\left( k + 1 \right)}</script><script type="math/tex; mode=display">\frac{\partial \mathop{\rm J}\nolimits \left( \Theta  \right)}{\partial \Theta^{\left( k \right)}}= \delta^{\left( k + 1 \right)} \otimes {a^{\left( k \right)}}^\sf{T}</script><p>式子中的$\otimes$运算符代表Outer Product。</p>
+<p>这里的推导并不优美。因为我的Matrix Calculas并不是非常精通，所以对$\Theta^{\left( k \right)}$的梯度求导的过程没有完全使用Matrix Calculas，而是先求出了每一个$\Theta _{ij}^{\left( k \right)}$的表达式之后再合并在一起的。这里完整的数学需要Vector-by-Matrix的求导。</p>
+<script type="math/tex; mode=display">\frac{\partial \mathop{\rm J}\nolimits \left( \Theta  \right)}{\partial \Theta _{ij}^{\left( k \right)}} = \frac{\partial z^{\left( k + 1 \right)}}{\partial \Theta _{ij}^{\left( k \right)}}\delta ^{\left( k + 1 \right)} = a_j\delta_i^{\left( k + 1 \right)}</script><script type="math/tex; mode=display">\frac{\partial \mathop{\rm J}\nolimits \left( \Theta  \right)}{\partial \Theta^{\left( k \right)}}= \delta^{\left( k + 1 \right)} \otimes {a^{\left( k \right)}}= \delta^{\left( k + 1 \right)} \cdot {a^{\left( k \right)}}^\sf{T}</script><p>式子中的$\otimes$运算符代表Outer Product。</p>
 </li>
 <li><p><strong>算法过程的向量化</strong></p>
 <p>在真实的应用中，我们通常会一次性读入$m$条数据进行拟合，这时候会有如下处理：</p>
@@ -518,8 +519,8 @@ $$\begin{array}{l}\frac{\partial {\mathop{\rm J}\nolimits} \left( \Theta  \righ
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/09/04/Backpropagation_notation/" rel="next" title="Forward and Backward Propagation 算法的实现(记号更新)">
-                <i class="fa fa-chevron-left"></i> Forward and Backward Propagation 算法的实现(记号更新)
+              <a href="/2017/09/03/Welcome/" rel="next" title="WELCOME">
+                <i class="fa fa-chevron-left"></i> WELCOME
               </a>
             
           </div>
@@ -612,7 +613,7 @@ $$\begin{array}{l}\frac{\partial {\mathop{\rm J}\nolimits} \left( \Theta  \righ
             
               <a href="/archives">
             
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -625,7 +626,7 @@ $$\begin{array}{l}\frac{\partial {\mathop{\rm J}\nolimits} \left( \Theta  \righ
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

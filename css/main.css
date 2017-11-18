@@ -555,7 +555,10 @@ pre code {
   background-color: #f7f7f7;
 }
 .highlight .line {
-  height: 20px;
+  padding-top: -1px;
+  padding-bottom: -1px;
+  height: 30px;
+  white-space: normal;
 }
 .gutter {
   -webkit-user-select: none;
@@ -1927,7 +1930,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #91ffff;
+  background: #2894da;
 }
 .links-of-blogroll {
   font-size: 13px;
