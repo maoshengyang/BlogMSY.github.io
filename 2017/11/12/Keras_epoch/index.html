@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="This Blog Has No Name">
 <meta property="og:description" content="在学习使用Keras + TensorFlow的时候遇到的问题，今天终于解决了，特此记录一下。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-25T03:44:09.000Z">
+<meta property="og:updated_time" content="2017-11-25T13:53:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Keras中的BatchNormalization Layer的设置">
 <meta name="twitter:description" content="在学习使用Keras + TensorFlow的时候遇到的问题，今天终于解决了，特此记录一下。">
@@ -351,9 +351,9 @@
         <p>在学习使用Keras + TensorFlow的时候遇到的问题，今天终于解决了，特此记录一下。</p>
 <a id="more"></a>
 <h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>基本import module的代码段如下。</p>
-<figure class="highlight python"><figcaption><span class="caption">Python code</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> keras</div><div class="line">...</div><div class="line"><span class="keyword">import</span> keras.backend <span class="keyword">as</span> K  <span class="comment"># backend is Tensorflow</span></div><div class="line">K.set_image_data_format(<span class="string">'channels_last'</span>)</div></pre></div></div></figure>
+<figure class="highlight python"><figcaption><span class="caption">Module import code</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></div><div class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> keras</div><div class="line">...</div><div class="line"><span class="keyword">import</span> keras.backend <span class="keyword">as</span> K  <span class="comment"># backend is Tensorflow</span></div><div class="line">K.set_image_data_format(<span class="string">'channels_last'</span>)</div></pre></div></div></figure>
 <p>尝试构建并训练了ResNet50。结构中包括了多个BatchNormalization Layer。</p>
-<figure class="highlight python"><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></div><div class="code"><pre><div class="line">model = ResNet50(input_shape=(...), classes=...)</div><div class="line">adam_opter = keras.optimizers.Adam(lr=..., beta_1=<span class="number">0.9</span>, beta_2=<span class="number">0.999</span>, epsilon=<span class="number">1e-08</span>, decay=<span class="number">0.0</span>)</div><div class="line">model.compile(optimizer=adam_opter, loss=<span class="string">'categorical_crossentropy'</span>, metrics=[<span class="string">'accuracy'</span>])</div><div class="line">model.fit(X_train, Y_train, epochs=..., batch_size=<span class="number">32</span>)</div></pre></div></div></figure>
+<figure class="highlight python"><figcaption><span class="caption">Build my own ResNet50 and train the model</span></figcaption><div class="figcode"><div class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></div><div class="code"><pre><div class="line">model = ResNet50(input_shape=(...), classes=...)</div><div class="line">adam_opter = keras.optimizers.Adam(lr=..., beta_1=<span class="number">0.9</span>, beta_2=<span class="number">0.999</span>, epsilon=<span class="number">1e-08</span>, decay=<span class="number">0.0</span>)</div><div class="line">model.compile(optimizer=adam_opter, loss=<span class="string">'categorical_crossentropy'</span>, metrics=[<span class="string">'accuracy'</span>])</div><div class="line">model.fit(X_train, Y_train, epochs=..., batch_size=<span class="number">32</span>)</div></pre></div></div></figure>
 <p>训练了20多个epoch（每一个epoch表示把整个训练数据集遍历一遍），发现屏幕输出的Loss到了0.1的数量级，而acc达到了95%左右，于是停止了训练，将模型的权重保存下来。调用如下evaluate函数，</p>
 <figure class="highlight python"><div class="figcode"><div class="gutter"><pre><div class="line">1</div></pre></div><div class="code"><pre><div class="line">model.evaluate(X_train, Y_train, batch_size=<span class="number">32</span>)</div></pre></div></div></figure>
 <p>发现模型甚至对训练样本的估计效果都很差，准确率与之前训练时的输出相差非常远。<br>调用如下predict函数，发现对训练集的估计都是同一个class。</p>
@@ -447,6 +447,10 @@ moving\_variance = \left( {1 - momentum} \right) \times batch\_variance + moment
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/11/27/Deconv/" rel="prev" title="Convolution和Deconvolution操作">
+                Convolution和Deconvolution操作 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -527,7 +531,7 @@ moving\_variance = \left( {1 - momentum} \right) \times batch\_variance + moment
             
               <a href="/archives">
             
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

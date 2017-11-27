@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Machine Learning," />
 
 
 
@@ -95,16 +95,18 @@
 
 
 
-<meta name="description" content="\int_{birth}^{death} learning \dot dt">
-<meta property="og:type" content="website">
-<meta property="og:title" content="This Blog Has No Name">
-<meta property="og:url" content="http://maoshengyang.coding.me/page/2/index.html">
+<meta name="description" content="Coursera深度学习专项（Deep Learning Specialization by Andrew Ng）的学习笔记 在深度学习专项（Deep Learning Specialization）课程中的style transform这一节提到了将卷积层的学习内容可视化的技术和论文。论文中用到了Deconvolution的操作。在这里对Convolution和Deconvolution进行一些">
+<meta name="keywords" content="Machine Learning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Convolution和Deconvolution操作">
+<meta property="og:url" content="http://maoshengyang.coding.me/2017/11/27/Deconv/index.html">
 <meta property="og:site_name" content="This Blog Has No Name">
-<meta property="og:description" content="\int_{birth}^{death} learning \dot dt">
+<meta property="og:description" content="Coursera深度学习专项（Deep Learning Specialization by Andrew Ng）的学习笔记 在深度学习专项（Deep Learning Specialization）课程中的style transform这一节提到了将卷积层的学习内容可视化的技术和论文。论文中用到了Deconvolution的操作。在这里对Convolution和Deconvolution进行一些">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-26T17:17:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="This Blog Has No Name">
-<meta name="twitter:description" content="\int_{birth}^{death} learning \dot dt">
+<meta name="twitter:title" content="Convolution和Deconvolution操作">
+<meta name="twitter:description" content="Coursera深度学习专项（Deep Learning Specialization by Andrew Ng）的学习笔记 在深度学习专项（Deep Learning Specialization）课程中的style transform这一节提到了将卷积层的学习内容可视化的技术和论文。论文中用到了Deconvolution的操作。在这里对Convolution和Deconvolution进行一些">
 
 
 
@@ -134,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://maoshengyang.coding.me/page/2/"/>
+  <link rel="canonical" href="http://maoshengyang.coding.me/2017/11/27/Deconv/"/>
 
 
 
 
 
-  <title>This Blog Has No Name</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Convolution和Deconvolution操作 | This Blog Has No Name</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -159,8 +161,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left 
-  page-home">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -253,9 +254,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -268,7 +269,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://maoshengyang.coding.me/2017/09/10/LogisticReg/">
+    <link itemprop="mainEntityOfPage" href="http://maoshengyang.coding.me/2017/11/27/Deconv/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="MaoShengYang">
@@ -285,9 +286,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/10/LogisticReg/" itemprop="url">Logistic Regression 的相关数学推导</a></h1>
+          <h1 class="post-title" itemprop="name headline">Convolution和Deconvolution操作</h1>
         
 
         <div class="post-meta">
@@ -299,8 +298,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-10T00:00:00+08:00">
-                2017-09-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-27T00:30:00+08:00">
+                2017-11-27
               </time>
             
 
@@ -319,8 +318,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/09/10/LogisticReg/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/09/10/LogisticReg/" itemprop="commentsCount"></span>
+                <a href="/2017/11/27/Deconv/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/11/27/Deconv/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -349,23 +348,13 @@
       
 
       
-        
-          <p><strong>Coursera机器学习课程（by Andrew Ng）的学习笔记</strong></p>
-<p>对Logistic Regression课程中的数学推导进行补充记录，主要内容如下：</p>
-<ul>
-<li>利用极大似然估计推导Cost Function</li>
-<li>如何理解从模型函数到概率的转换</li>
-<li>梯度的数学推导</li>
-</ul>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/10/LogisticReg/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <p><strong>Coursera深度学习专项（Deep Learning Specialization by Andrew Ng）的学习笔记</strong></p>
+<p>在深度学习专项（Deep Learning Specialization）课程中的style transform这一节提到了将卷积层的学习内容可视化的技术和论文。论文中用到了Deconvolution的操作。在这里对Convolution和Deconvolution进行一些讨论。</p>
+<a id="more"></a>
+<h3 id="Convolution操作"><a href="#Convolution操作" class="headerlink" title="Convolution操作"></a>Convolution操作</h3><p>通常的2D Convolution操作需要将卷积核矩阵旋转180度后，再在被卷积矩阵上进行滑动，并进行Element-Wise相乘求和。在图像领域，通常省略了卷积核旋转180度这个步骤。其实这种操作叫Cross- Correlation，然而被命名为了Convolution操作。</p>
+<h3 id="Deconvolution操作"><a href="#Deconvolution操作" class="headerlink" title="Deconvolution操作"></a>Deconvolution操作</h3><p>Deconvolution操作从名字上是Convolution操作的逆，直译是逆卷积或者反卷积，但实际上的结果并不如此。因为对某个矩阵的卷积操作后的结果进行逆卷积操作并不能还原这个矩阵。</p>
+<script type="math/tex; mode=display">A \ne {\rm Deconv2D}\left({\rm Conv2D}\left(A\right)\right)</script><p>Reference<br><a href="https://stackoverflow.com/questions/47157526/resnet-100-accuracy-during-training-but-33-prediction-accuracy-with-the-same" target="_blank" rel="external">https://stackoverflow.com/questions/47157526/resnet-100-accuracy-during-training-but-33-prediction-accuracy-with-the-same</a></p>
+
       
     </div>
     
@@ -375,161 +364,70 @@
     
 
     
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>赏点儿猫粮呗~</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="MaoShengYang WeChat Pay"/>
+        <p>微信打赏，WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="MaoShengYang Alipay"/>
+        <p>支付宝打赏，Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
 
     
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://maoshengyang.coding.me/2017/09/04/Backpropagation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="MaoShengYang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/Photo.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="This Blog Has No Name">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/04/Backpropagation/" itemprop="url">Backpropagation 算法的数学推导</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-04T00:00:00+08:00">
-                2017-09-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
           
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/09/04/Backpropagation/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/09/04/Backpropagation/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <p><strong>Coursera机器学习课程（by Andrew Ng）的学习笔记</strong></p>
-<p>对Neural Network课程中的数学推导进行补充记录，主要涉及以下内容:</p>
-<ul>
-<li>Matrix Calculus的简单介绍</li>
-<li>Backpropagation的纯数学推导</li>
-</ul>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/04/Backpropagation/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/12/Keras_epoch/" rel="next" title="Keras中的BatchNormalization Layer的设置">
+                <i class="fa fa-chevron-left"></i> Keras中的BatchNormalization Layer的设置
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -539,14 +437,11 @@
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -554,6 +449,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
 
         </div>
         
@@ -574,8 +475,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
             <img class="site-author-image" itemprop="image"
@@ -677,6 +587,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Convolution操作"><span class="nav-number">1.</span> <span class="nav-text">Convolution操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deconvolution操作"><span class="nav-number">2.</span> <span class="nav-text">Deconvolution操作</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -798,6 +724,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
 
   
 
@@ -822,6 +752,8 @@
 		_hcwp.push({widget:"Bloggerstream", widget_id: 95599, selector:".hc-comment-count", label: "{\%COUNT%\}" });
 
 		
+		_hcwp.push({widget:"Stream", widget_id: 95599, xid: "2017/11/27/Deconv/"});
+		
 
 		(function() {
 		if("HC_LOAD_INIT" in window)return;
@@ -832,7 +764,24 @@
 		var s = document.getElementsByTagName("script")[0];
 		s.parentNode.insertBefore(hcc, s.nextSibling);
 		})();
-		</script>
+		</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 	
 
@@ -860,43 +809,6 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
   
 
 
